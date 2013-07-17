@@ -29,7 +29,7 @@ then
 fi
 
 echo "Performing unit test"
-python script/clienttest.py
+python2.4 script/clienttest.py
 if [ $? -ne 0 ]
 then
     echo "IRC Server unit test failed, exiting"
@@ -95,7 +95,7 @@ then
     exit 1
 fi
 
-python script/clienttest.py ${DEPLOY_BOX}
+python2.4 script/clienttest.py ${DEPLOY_BOX}
 if [ $? -ne 0 ]
 then
     echo "IRC Server system test failed, exiting"

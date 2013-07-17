@@ -73,13 +73,13 @@ fout.close()
 fout2.close()
 
 clientData = ""
-clientData = open('client1.txt').read()
+clientData = open('client2.txt').read()
 if clientData.find(r'> My Message2') == -1:
     print "FAILURE: Client2 message not received"
     sys.exit(4)
 
 clientData = ""
-clientData = open('client2.txt').read()
+clientData = open('client1.txt').read()
 if clientData.find(r'> My Message1') == -1:
     print "FAILURE: Client1 message not received"
     sys.exit(4)
