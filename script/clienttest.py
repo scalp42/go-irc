@@ -47,7 +47,7 @@ print 'Testing with: ' + clientCmd
 fout = file('client1.txt','w')
 proc = pexpect.spawn(clientCmd)
 proc.logfile = fout
-waitServer(proc, 'Please give you name:')
+waitServer(proc, 'Please give your name, sir/madam:')
 proc.sendline('Client1')
 waitServer(proc, 'you>')
 
