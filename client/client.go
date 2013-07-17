@@ -96,7 +96,7 @@ func main() {
     Log("main(): connected ");
 
     // get the user name
-    fmt.Print("Please give your name: ");
+    fmt.Print("Please give your name, sir/madam: ");
     reader := bufio.NewReader(os.Stdin);
     name, _ := reader.ReadBytes('\n');
 
