@@ -1,14 +1,15 @@
 package main
 
 import (
-    "fmt";
-    "net";
-    "log";
-    "os";
-    "bytes";
     "bufio";
-    "time";
+    "bytes";
     "flag";
+    "fmt";
+    "log";
+    "net";
+    "os";
+    "strings";
+    "time";
 )
 
 var running bool;  // global variable if client is running
@@ -55,6 +56,7 @@ func clientsender(cn net.Conn) {
     for {
         fmt.Print("you> ");
         input, _ := reader.ReadBytes('\n');
+       input = strings.ToUpper(input); // furryhacker -- make everyone shout
         if bytes.EqualFold(input, []byte("/quit\n")) {
             cn.Write([]byte("/quit"));
             running = false;
