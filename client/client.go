@@ -53,7 +53,7 @@ func Read(con net.Conn) string{
 func clientsender(cn net.Conn) {
     reader := bufio.NewReader(os.Stdin);
     for {
-        fmt.Print("you> ");
+        fmt.Print("$ ");
         input, _ := reader.ReadBytes('\n');
         if bytes.EqualFold(input, []byte("/quit\n")) {
             cn.Write([]byte("/quit"));
