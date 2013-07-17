@@ -8,7 +8,6 @@ import (
     "log";
     "net";
     "os";
-    "strings";
     "time";
 )
 
@@ -61,7 +60,7 @@ func clientsender(cn net.Conn) {
             running = false;
             break;
         }
-        Log("clientsender(): send: ", strings.ToUpper(string(input[0:len(input)-1])));
+        Log("clientsender(): send: ", string(input[0:len(input)-1]));
         cn.Write(input[0:len(input)-1]);
     }
 }
