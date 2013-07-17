@@ -11,7 +11,7 @@ def waitServer(procIn, waitData):
         index = 1
         while (index != 0):
             index = procIn.expect([waitData, '>you'], timeout=5)
-        
+
     except pexpect.EOF:
         print("FAILURE: Server exited too soon")
         sys.exit(1)
@@ -25,7 +25,7 @@ def waitServer(procIn, waitData):
 myDir = os.path.dirname(sys.argv[0])
 while myDir.find('script') != -1:
     myDir = os.path.dirname(myDir);
-   
+
 myDir = os.path.join(myDir, "bin")
 serverCmd = os.path.join(myDir, "server")
 clientCmd = os.path.join(myDir, "client")
@@ -88,3 +88,4 @@ os.remove('client1.txt')
 os.remove('client2.txt')
 
 sys.exit(0)
+
