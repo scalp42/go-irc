@@ -56,13 +56,12 @@ func clientsender(cn net.Conn) {
     for {
         fmt.Print("you> ");
         input, _ := reader.ReadBytes('\n');
-       input = strings.ToUpper(input); // furryhacker -- make everyone shout
         if bytes.EqualFold(input, []byte("/quit\n")) {
             cn.Write([]byte("/quit"));
             running = false;
             break;
         }
-        Log("clientsender(): send: ", string(input[0:len(input)-1]));
+        Log("clientsender(): send: ", strings.ToUpper(string(input[0:len(input)-1])));
         cn.Write(input[0:len(input)-1]);
     }
 }
