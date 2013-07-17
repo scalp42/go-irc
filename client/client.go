@@ -86,7 +86,7 @@ func main() {
     running = true;
     Log("main(): start ");
     
-    destination := fmt.Sprintf("%s:%s", *server,*port); 
+    destination := fmt.Sprintf("%s:%s is now PlanXed", *server,*port); 
     fmt.Println("Connected to: ", destination);
 
     Log("main(): connecto to ", destination);
