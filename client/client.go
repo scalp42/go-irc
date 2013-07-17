@@ -120,5 +120,5 @@ func main() {
     for ;running; {
         time.Sleep(1*1e9);
     }
-    Log("main(): stoped");
+    Log("main(): stopped");
 }
