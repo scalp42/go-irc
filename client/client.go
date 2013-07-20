@@ -14,9 +14,8 @@ import (
 
 var running bool;  // global variable if client is running
 var debug = flag.Bool("d", false, "enable debug mode ( display debugging information )")
-var server = flag.String("s", "", "server name to connect to")
-var port = flag.String("p", "" , "port number to connect to")
-var current_user,_ = user.Current()
+var server = flag.String("s", "127.0.0.1", "server name to connect to")
+var port = flag.String("p", "9999" , "port number to connect to")
 
 // func Log(v ...): loging. give log information if debug is true
 
@@ -30,7 +29,7 @@ func Log(v ...string) {
 // func test(): testing for error
 func test(err error, mesg string) {
     if err!=nil {
-         log.Printf("CLIENT: ERROR: ", mesg);
+         log.Printf("CLIENT: ERROR: %s : %s", mesg, err);
          os.Exit(-1);
     } else {
         Log("Ok: ", mesg);
@@ -76,12 +75,14 @@ func clientreceiver(cn net.Conn) {
 }
 
 func usage() {
-    fmt.Fprintf(os.Stderr, "usage: client 192.168.1.1:9999\n")
+    //fmt.Fprintf(os.Stderr, "usage: client 192.168.1.1:9999\n")
     flag.PrintDefaults()
     os.Exit(2)
 }
 
 func main() {
+    flag.Usage = usage;
+    flag.Parse();
    flag.Usage = usage;
    flag.Parse();
     fmt.Print("Hello ")
@@ -93,7 +94,7 @@ func main() {
     running = true;
     Log("main(): start ");
     
-    destination := fmt.Sprintf("%s:%s", *server,*port); 
+    destination := fmt.Sprintf("%s:%s", *server, *port); 
     fmt.Println("Connected to: ", destination);
 
     Log("main(): connecto to ", destination);
