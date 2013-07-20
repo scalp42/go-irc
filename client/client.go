@@ -89,12 +89,12 @@ func main() {
     fmt.Print(" \n Who lives in ")
     fmt.Print(current_user.HomeDir)
     fmt.Print(" \n")
-    
+
     running = true;
     Log("main(): start ");
-    
-    destination := fmt.Sprintf("%s:%s", *server,*port); 
-    fmt.Println("Connected to: ", destination);
+
+    destination := fmt.Sprintf("%s:%s", *server,*port);
+    fmt.Println("Connecting to: ", destination);
 
     Log("main(): connecto to ", destination);
     cn, err := net.Dial("tcp", destination);
@@ -107,6 +107,8 @@ func main() {
     reader := bufio.NewReader(os.Stdin);
     name, _ := reader.ReadBytes('\n');
 
+    fmt.Println("Enter /quit to quit");
+
     //cn.Write(strings.Bytes("User: "));
     cn.Write(name[0:len(name)-1]);
 
@@ -115,7 +117,7 @@ func main() {
     go clientreceiver(cn);
     Log("main(): start sender");
     go clientsender(cn);
-    
+
     // wait for quiting (/quit). run until running is true
     for ;running; {
         time.Sleep(1*1e9);
