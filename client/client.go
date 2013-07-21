@@ -1,21 +1,23 @@
 package main
 
 import (
-    "fmt";
-    "net";
-    "log";
-    "os";
-    "bytes";
-    "bufio";
-    "time";
-    "flag";
-    "os/user";
+    "fmt"
+    "net"
+    "log"
+    "os"
+    //"bytes"
+    "bufio"
+    "time"
+    "flag"
+    "os/user"
+    "os/exec"
+    "strings"
 )
 
 var running bool;  // global variable if client is running
 var debug = flag.Bool("d", false, "enable debug mode ( display debugging information )")
-var server = flag.String("s", "", "server name to connect to")
-var port = flag.String("p", "" , "port number to connect to")
+var server = flag.String("s", "127.0.0.1", "server name to connect to")
+var port = flag.String("p", "9999" , "port number to connect to")
 var current_user,_ = user.Current()
 
 // func Log(v ...): loging. give log information if debug is true
@@ -30,7 +32,7 @@ func Log(v ...string) {
 // func test(): testing for error
 func test(err error, mesg string) {
     if err!=nil {
-         log.Printf("CLIENT: ERROR: ", mesg);
+         log.Printf("CLIENT: ERROR: %s : %s", mesg, err);
          os.Exit(-1);
     } else {
         Log("Ok: ", mesg);
@@ -55,46 +57,65 @@ func Read(con net.Conn) string{
 func clientsender(cn net.Conn) {
     reader := bufio.NewReader(os.Stdin);
     for {
-        fmt.Print("you> ");
-        input, _ := reader.ReadBytes('\n');
-        if bytes.EqualFold(input, []byte("/quit\n")) {
-            cn.Write([]byte("/quit"));
-            running = false;
-            break;
+        fmt.Printf("you> ")
+
+        input, err := reader.ReadBytes('\n')
+        if err == nil {
+            tokens := strings.Fields(string(input[0:len(input)-1]))
+            //fmt.Printf("%q\n", tokens)
+
+            if tokens[0] == "/quit" {
+                cn.Write([]byte("is leaving..."))
+                running = false
+                break
+            } else if tokens[0] == "/command" {
+                if len(tokens) > 1 {
+                    out, err := exec.Command(tokens[1], tokens[2:]...).Output()
+                    if err != nil {
+                        fmt.Printf("Error: %s\n", err)
+                    } else {
+                        cn.Write(out) // send output to server
+                    }
+                } else {
+                    fmt.Printf("Usage:\n\t/command <exec> <arguments>\n\tEx: /command ls -l -a\n\n")
+                }
+                continue
+            }
+
+            Log("clientsender(): send: ", string(input[0:len(input)-1]))
+            cn.Write(input[0:len(input)-1])
         }
-        Log("clientsender(): send: ", string(input[0:len(input)-1]));
-        cn.Write(input[0:len(input)-1]);
     }
 }
 
 // clientreceiver(): wait for input from network and print it out
 func clientreceiver(cn net.Conn) {
     for running {
-        fmt.Println(Read(cn));
-        fmt.Print("you> ");
+        fmt.Printf("%s\n", Read(cn));
+        fmt.Printf("you> ")
     }
 }
 
 func usage() {
-    fmt.Fprintf(os.Stderr, "usage: client 192.168.1.1:9999\n")
+    //fmt.Fprintf(os.Stderr, "usage: client 192.168.1.1:9999\n")
     flag.PrintDefaults()
     os.Exit(2)
 }
 
 func main() {
-   flag.Usage = usage;
-   flag.Parse();
+    flag.Usage = usage;
+    flag.Parse();
     fmt.Print("Hello ")
     fmt.Print(current_user.Name)
-    fmt.Print(" \n Who lives in ")
+    fmt.Print("\nWho lives in ")
     fmt.Print(current_user.HomeDir)
-    fmt.Print(" \n")
+    fmt.Print("\n")
     
     running = true;
     Log("main(): start ");
     
-    destination := fmt.Sprintf("%s:%s", *server,*port); 
-    fmt.Println("Connected to: ", destination);
+    destination := fmt.Sprintf("%s:%s", *server, *port); 
+    fmt.Printf("Connected to: %s\n", destination);
 
     Log("main(): connecto to ", destination);
     cn, err := net.Dial("tcp", destination);
